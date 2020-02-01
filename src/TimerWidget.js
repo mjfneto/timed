@@ -51,12 +51,7 @@ var App = (function TimerWidget(App) {
     var timer = App.findTimer(id);
     var { prefixedId, interval } = timer;
 
-    if (interval) {
-      timer.interval = null;
-      clearInterval(interval);
-    }
-
-    _shutDown(prefixedId);
+    _shutDown(interval, prefixedId);
 
     $(prefixedId).remove();
 
@@ -68,12 +63,7 @@ var App = (function TimerWidget(App) {
     var timer = App.findTimer(id);
     var { prefixedId, interval } = timer;
 
-    _shutDown(prefixedId);
-
-    if (interval) {
-      clearInterval(interval);
-      timer.interval = null;
-    }
+    _shutDown(interval, prefixedId);
 
     App.openConfigPageToEdit(e.target.id.split('-'));
   }
@@ -113,7 +103,6 @@ var App = (function TimerWidget(App) {
     $(prefixedId + '-pause').off('click', _pause);
 
     clearInterval(interval);
-    timer.interval = null;
   }
 
   function _reset(e) {
@@ -125,7 +114,6 @@ var App = (function TimerWidget(App) {
     $(prefixedId + '-reset').off('click', _reset);
 
     clearInterval(interval);
-    timer.interval = null;
 
     timer.elapsed !== timer.time && (timer.elapsed = timer.time);
     $(`#timer-${id}-display`).txt(_secondsToTimerFormat(timer.time));
@@ -142,7 +130,11 @@ var App = (function TimerWidget(App) {
     );
   }
 
-  function _shutDown(prefixedId) {
+  function _shutDown(interval, prefixedId) {
+    if (interval) {
+      clearInterval(interval);
+    }
+
     $(prefixedId + '-start').off('click', _start);
     $(prefixedId + '-pause').off('click', _pause);
     $(prefixedId + '-reset').off('click', _reset);
@@ -153,9 +145,9 @@ var App = (function TimerWidget(App) {
   function _start(e) {
     var [, id] = e.target.id.split('-');
     var timer = App.findTimer(id);
-    var { prefixedId } = timer;
-
     timer.interval = setInterval(_decrease, 1000);
+
+    var { prefixedId, interval } = timer;
 
     $(prefixedId + '-start').off('click', _start);
     $(prefixedId + '-pause').on('click', _pause);
@@ -164,7 +156,12 @@ var App = (function TimerWidget(App) {
     // ***********
 
     function _decrease() {
-      $(`#timer-${id}-display`).txt(_secondsToTimerFormat(--timer.elapsed));
+      if (timer.elapsed > 0) {
+        $(`#timer-${id}-display`).txt(_secondsToTimerFormat(--timer.elapsed));
+      } else {
+        clearInterval(interval);
+        $(prefixedId + '-pause').off('click', _pause);
+      }
     }
   }
 })(App || {});
