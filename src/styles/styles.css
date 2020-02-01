@@ -1,0 +1,95 @@
+body {
+  font-family: sans-serif;
+  height: 500px;
+  width: 600px;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+#page-menu {
+  width: 10%;
+  min-width: 100px;
+}
+
+#page-menu > ul {
+  padding: 5px 0 5px 5px;
+}
+
+#page-menu li {
+  list-style: none;
+  padding: 5px 0 5px 5px;
+}
+
+#page-menu li:hover {
+  cursor: pointer;
+  color: peru;
+}
+
+#page-menu li.active {
+  color: peru;
+}
+
+main {
+  width: 90%;
+  position: relative;
+}
+
+menu {
+  padding: 10px;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  display: inline;
+  padding: 0;
+}
+
+.form-wrapper {
+  padding: 15px;
+}
+
+.page {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: peru;
+}
+
+/* CSS Specificity: 110  https://www.w3schools.com/css/css_specificity.asp */
+#config-page.active {
+  position: absolute;
+  z-index: 1;
+}
+
+/* CSS Specificity: 20 */
+.page.active {
+  display: block;
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link:hover,
+.link:focus {
+  text-decoration: none;
+}
+
+#timers {
+  margin: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.widget {
+  margin: 10px;
+  padding: 5px;
+}
